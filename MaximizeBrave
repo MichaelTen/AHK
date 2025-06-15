@@ -1,0 +1,23 @@
+# Requires AutoHotkey v2.0+
+# For maximizing all Brave Windows
+
+; Get primary monitor work area
+MonitorGetWorkArea(1, &left, &top, &right, &bottom)
+width := right - left
+height := bottom - top
+
+; Loop through Brave windows safely
+for hwnd in WinGetList("ahk_exe brave.exe") {
+    if !WinExist("ahk_id " hwnd)
+        continue
+
+    try {
+        WinRestore(hwnd)
+        WinMove(hwnd, left, top, width, height)
+        WinActivate(hwnd)
+        Sleep 200  ; Optional: give time for redraw
+    } catch {
+        ; If any window fails, skip gracefully
+        continue
+    }
+}
